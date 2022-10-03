@@ -171,7 +171,6 @@ function DashboardContent() {
             <Grid container spacing='3'>
                 <Grid>
                     <Paper>
-                      {/* <p>Hi</p> */}
                       <ResponseDisplay></ResponseDisplay>
                     </Paper>
                 </Grid>
