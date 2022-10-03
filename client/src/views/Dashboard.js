@@ -18,6 +18,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
+import { Button } from '@mui/material';
+import ResponseDisplay from './ResponseDisplay';
 
 function Copyright(props) {
   return (
@@ -108,6 +110,14 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
+            <Button 
+              variant='contained'
+              sx={{
+                marginRight: '24px'
+              }}
+              >
+              Connect to Xero
+            </Button>
             <Typography
               component="h1"
               variant="h6"
@@ -158,9 +168,12 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+            <Grid container spacing='3'>
                 <Grid>
-                    <Paper></Paper>
+                    <Paper>
+                      {/* <p>Hi</p> */}
+                      <ResponseDisplay></ResponseDisplay>
+                    </Paper>
                 </Grid>
             </Grid>
             <Copyright sx={{ pt: 4 }} />
