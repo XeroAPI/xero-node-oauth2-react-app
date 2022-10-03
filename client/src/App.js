@@ -1,10 +1,9 @@
 import React from "react";
+import Dashboard from "./views/Dashboard";
 
 const App = () => {
     return (
-        <div>
-            <h1>Webpack React App</h1>
-        </div>
+        <Dashboard></Dashboard>
     )
 };
 
