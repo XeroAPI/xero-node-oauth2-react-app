@@ -8,17 +8,13 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './listItems';
-import { Button } from '@mui/material';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { Button, Collapse, ListItemButton, ListItemText } from '@mui/material';
 import ResponseDisplay from './ResponseDisplay';
 
 function Copyright(props) {
@@ -83,55 +79,31 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  // const [open, setOpen] = React.useState(true);
+  // const toggleDrawer = () => {
+  //   setOpen(!open);
+  // };
+
+  const [accountingOpen, setAccountingOpen] = React.useState(true);
+  const toggleAccountingList = () => {
+    setAccountingOpen(!accountingOpen);
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
+          <Toolbar>
             <Button 
               variant='contained'
+              // startIcon={'client/public/assets/8b6963f7-38bb-4360-9693-8ed01584812f.jpeg'}
               sx={{
                 marginRight: '24px'
               }}
               >
               Connect to Xero
             </Button>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -139,19 +111,32 @@ function DashboardContent() {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
+              // justifyContent: 'flex-end',
               px: [1],
             }}
           >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
+            Text Here ^^
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            <ListItemButton onClick={toggleAccountingList}>
+              <ListItemText primary="Accounting" />
+              {accountingOpen ? <ExpandLess/> : <ExpandMore/>}
+            </ListItemButton>
+            <Collapse in={accountingOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton sx={{ pl: 4}}>
+                  <ListItemText primary="Accounts"/>
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4}}>
+                  <ListItemText primary="Contacts"/>
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4}}>
+                  <ListItemText primary="Organisations"/>
+                </ListItemButton>
+              </List>
+            </Collapse>
+            {/* {mainListItems} */}
           </List>
         </Drawer>
         <Box
@@ -170,12 +155,18 @@ function DashboardContent() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing='3'>
                 <Grid>
-                    <Paper>
+                    <Paper
+                    sx={{
+                      height: '40vh',
+                      width: '55vw',
+                      marginLeft: 'auto',
+                      marginRight: 'auto'
+                    }}>
                       <ResponseDisplay></ResponseDisplay>
                     </Paper>
                 </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
+            {/* <Copyright sx={{ pt: 4 }} /> */}
           </Container>
         </Box>
       </Box>
