@@ -79,14 +79,21 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  // const [open, setOpen] = React.useState(true);
-  // const toggleDrawer = () => {
-  //   setOpen(!open);
-  // };
 
   const [accountingOpen, setAccountingOpen] = React.useState(true);
   const toggleAccountingList = () => {
     setAccountingOpen(!accountingOpen);
+  }
+
+  const [connected, setConnected] = React.useState(false);
+  const connectToXero = () => {
+    fetch('/api/connect')
+    .then( (response) => {
+
+      setConnected(true);
+      console.log(connected);
+    })
+    .catch(err => "error")
   }
 
   return (
@@ -97,6 +104,7 @@ function DashboardContent() {
           <Toolbar>
             <Button 
               variant='contained'
+              onClick={connectToXero}
               // startIcon={'client/public/assets/8b6963f7-38bb-4360-9693-8ed01584812f.jpeg'}
               sx={{
                 marginRight: '24px'

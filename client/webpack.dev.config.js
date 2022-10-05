@@ -42,5 +42,13 @@ module.exports = {
             template: "public/index.html"
         }),
         new webpack.HotModuleReplacementPlugin()
-    ]
+    ],
+    devServer: {
+        proxy: {
+            '/api': {
+                target: 'http://localhost:3000',
+                changeOrigin: true,
+            },
+        },
+    },
 }
