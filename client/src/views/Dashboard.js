@@ -6,75 +6,64 @@ import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Button, Collapse, ListItemButton, ListItemText } from '@mui/material';
 import ResponseDisplay from './ResponseDisplay';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import HomeIcon from '@mui/icons-material/Home';
+import { useNavigate } from "react-router-dom";
+import NavBar from './components/NavBar';
+import SideMenu from './components/SideMenu';
 
 const drawerWidth = 240;
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+// const AppBar = styled(MuiAppBar, {
+//   shouldForwardProp: (prop) => prop !== 'open',
+// })(({ theme, open }) => ({
+//   zIndex: theme.zIndex.drawer + 1,
+//   transition: theme.transitions.create(['width', 'margin'], {
+//     easing: theme.transitions.easing.sharp,
+//     duration: theme.transitions.duration.leavingScreen,
+//   }),
+//   ...(open && {
+//     marginLeft: drawerWidth,
+//     width: `calc(100% - ${drawerWidth}px)`,
+//     transition: theme.transitions.create(['width', 'margin'], {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.enteringScreen,
+//     }),
+//   }),
+// }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
+// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+//   ({ theme, open }) => ({
+//     '& .MuiDrawer-paper': {
+//       position: 'relative',
+//       whiteSpace: 'nowrap',
+//       width: drawerWidth,
+//       transition: theme.transitions.create('width', {
+//         easing: theme.transitions.easing.sharp,
+//         duration: theme.transitions.duration.enteringScreen,
+//       }),
+//       boxSizing: 'border-box',
+//       ...(!open && {
+//         overflowX: 'hidden',
+//         transition: theme.transitions.create('width', {
+//           easing: theme.transitions.easing.sharp,
+//           duration: theme.transitions.duration.leavingScreen,
+//         }),
+//         width: theme.spacing(7),
+//         [theme.breakpoints.up('sm')]: {
+//           width: theme.spacing(9),
+//         },
+//       }),
+//     },
+//   }),
+// );
 
 const mdTheme = createTheme();
 
@@ -86,35 +75,91 @@ function DashboardContent() {
   }
 
   const [connected, setConnected] = React.useState(false);
+  const [connectButtonText, setConnectButtonText] = React.useState("Connect to Xero");
+  const [connectButtonIsDisabled, setConnectButtonIsDisabled] = React.useState(false);
   const connectToXero = () => {
-    fetch('/api/connect')
-    .then( (response) => {
+    setConnectButtonText("Connected to Xero");
+    setConnectButtonIsDisabled(true);
 
-      setConnected(true);
-      console.log(connected);
+    setConnected(true);
+
+    fetch('/api/connect')
+    .then( (response) => response.json())
+    .then(data => {
+      console.log(data.consentUrl);
+      window.location.href = data.consentUrl;
     })
     .catch(err => "error")
+  }
+
+  const navigate = useNavigate();
+
+  const getOrganisations = () => {
+    fetch('/api/organisations')
+    .then((response) => response.json()
+    )
+    .then(data => 
+      { 
+        console.log(data.organisations[0]);
+        navigate('/organisations');
+      })
+    .catch(err => "error")
+  }
+
+  const getAccounts = () => {
+    fetch('/api/accounts')
+    .then((response) => response.json())
+    .then(data => 
+      {
+        console.log(data.accounts[0]);
+        navigate('/accounts');
+      })
+    .catch(err => console.log(err))
+  }
+
+  const getContacts = () => {
+    fetch('/api/contacts')
+    .then((response) => response.json())
+    .then(data => 
+      {
+        console.log(data.contacts[0]);
+        navigate('/contacts');
+      })
+    .catch(err => console.log(err))
   }
 
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
+        <NavBar 
+          connectToXero={connectToXero} 
+          connectButtonIsDisabled={connectButtonIsDisabled} 
+          connectButtonText={connectButtonText}
+        />
+        {/* <AppBar position="absolute" open={open}>
           <Toolbar>
             <Button 
               variant='contained'
               onClick={connectToXero}
+              disabled={connectButtonIsDisabled}
               // startIcon={'client/public/assets/8b6963f7-38bb-4360-9693-8ed01584812f.jpeg'}
               sx={{
                 marginRight: '24px'
               }}
               >
-              Connect to Xero
+              {connectButtonText}
             </Button>
           </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
+        </AppBar> */}
+        <SideMenu
+          accountingOpen = {accountingOpen}
+          toggleAccountingList = {toggleAccountingList}
+          getOrganisations = {getOrganisations}
+          getAccounts = {getAccounts}
+          getContacts = {getContacts}
+          ></SideMenu>
+        {/* <Drawer variant="permanent" open={open}>
           <Toolbar
             sx={{
               display: 'flex',
@@ -123,7 +168,17 @@ function DashboardContent() {
               px: [1],
             }}
           >
-            Text Here ^^
+            <Button
+              variant='text'
+              startIcon={< HomeIcon />}
+              size="large"
+              onClick={() => {
+                console.log("home clicked");
+                navigate("/");
+              }}
+            >
+                Home
+            </Button>
           </Toolbar>
           <Divider />
           <List component="nav">
@@ -139,14 +194,13 @@ function DashboardContent() {
                 <ListItemButton sx={{ pl: 4}}>
                   <ListItemText primary="Contacts"/>
                 </ListItemButton>
-                <ListItemButton sx={{ pl: 4}}>
+                <ListItemButton sx={{ pl: 4}} onClick={getOrganisations}>
                   <ListItemText primary="Organisations"/>
                 </ListItemButton>
               </List>
             </Collapse>
-            {/* {mainListItems} */}
           </List>
-        </Drawer>
+        </Drawer> */}
         <Box
           component="main"
           sx={{
