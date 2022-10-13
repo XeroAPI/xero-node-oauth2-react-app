@@ -7,7 +7,7 @@ const session = require('express-session');
 
 const path = require('path');
 
-const cors = require('cors');
+// const cors = require('cors');
 
 import {TokenSet, TokenSetParameters, XeroAccessToken, XeroClient, XeroIdToken} from 'xero-node';
 import jwtDecode from 'jwt-decode';
@@ -38,12 +38,12 @@ class App {
     this.app = express();
     // this.config();
     this.routes();
-    this.app.use((req, res, next) => {
-      res.setHeader('Access-Control-Allow-Origin','*');
-      res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
-      res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
-      next();
-    });
+    // this.app.use((req, res, next) => {
+    //   res.setHeader('Access-Control-Allow-Origin','*');
+    //   res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+    //   res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
+    //   next();
+    // });
 
     this.app.use(express.static(path.join(__dirname, '..' , 'dist')))
 
@@ -52,15 +52,15 @@ class App {
     })
   }
 
-  authenticationData(req, res) {
-    return {
-      decodedIdToken: req.session.decodedIdToken,
-      decodedAccessToken: req.session.decodedAccessToken,
-      tokenSet: req.session.tokenSet,
-      allTenants: req.session.allTenants,
-      activeTenant: req.session.activeTenant,
-    };
-  };
+  // authenticationData(req, res) {
+  //   return {
+  //     decodedIdToken: req.session.decodedIdToken,
+  //     decodedAccessToken: req.session.decodedAccessToken,
+  //     tokenSet: req.session.tokenSet,
+  //     allTenants: req.session.allTenants,
+  //     activeTenant: req.session.activeTenant,
+  //   };
+  // };
   
   private routes(): void {
     const router = express.Router();
@@ -83,7 +83,8 @@ class App {
     router.get('/api/connect', async (req: Request, res : Response) => {
       try {
         const consentUrl: string = await xero.buildConsentUrl();
-        res.redirect(consentUrl);
+        // res.send(JSON.stringify({consentUrl: consentUrl}));
+        res.json({ consentUrl : consentUrl });
     
       } catch (err) {
         res.send('Sorry, could not connect');
@@ -115,6 +116,7 @@ class App {
       } catch (err) {
         console.log(err)
         res.status(res.statusCode);
+        res.send(err.error);
       }
     })
 
@@ -126,8 +128,8 @@ class App {
         res.send(JSON.stringify(response.body));
       } catch (err) {
         console.log(err);
-        const error = JSON.stringify(err.response.body, null, 2);
-        console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+        // const error = JSON.stringify(err.response.body, null, 2);
+        // console.log(`Status Code: ${err.response.statusCode} => ${error}`);
       }
     })
 
