@@ -1,7 +1,8 @@
 {
   "proxy": "http://localhost:3000",
   "scripts": {
-    "start": "webpack serve --config webpack.dev.config.js --open"
+    "start": "webpack serve --config webpack.dev.config.js --open",
+    "build": "webpack --config webpack.dev.config.js && cp -R ./dist ../server"
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
@@ -10,7 +11,8 @@
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

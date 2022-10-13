@@ -5,7 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: "development",
-    entry: './src/index.js',
+    entry: {
+        'index': './src/index.js',
+    },
     output: {
         publicPath: "/",
     },
@@ -45,7 +47,7 @@ module.exports = {
     ],
     devServer: {
         proxy: {
-            '/api': {
+            '/api/**': {
                 target: 'http://localhost:3000',
                 changeOrigin: true,
             },
