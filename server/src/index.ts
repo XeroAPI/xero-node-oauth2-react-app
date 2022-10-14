@@ -101,8 +101,6 @@ class App {
     router.get('/api/organisations', async (req : Request, res : Response) => {
       try {
         const response = await xero.accountingApi.getOrganisations(req.session.activeTenant.tenantId);
-        console.log(response.body || response.response.statusCode);
-
         res.send(JSON.stringify(response.body));
       } catch (err) {
         console.log(err);
@@ -114,8 +112,6 @@ class App {
     router.get('/api/accounts', async (req : Request, res : Response) => {
       try {
         const response = await xero.accountingApi.getAccounts(req.session.activeTenant.tenantId);
-        console.log(response.response.statusCode);
-
         res.send(JSON.stringify(response.body));
       } catch (err) {
         console.log(err);
@@ -127,8 +123,6 @@ class App {
     router.get('/api/contacts', async (req : Request, res : Response) => {
       try {
         const response = await xero.accountingApi.getContacts(req.session.activeTenant.tenantId);
-        console.log(response.response.statusCode);
-
         res.send(JSON.stringify(response.body));
       } catch (err) {
         console.log(err);

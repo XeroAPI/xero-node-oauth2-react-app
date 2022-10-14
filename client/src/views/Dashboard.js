@@ -29,7 +29,6 @@ const Dashboard = () => {
     fetch('/api/connect')
     .then( (response) => response.json())
     .then(data => {
-      console.log(data.consentUrl);
       window.location.href = data.consentUrl;
     })
     // .then (() => {
@@ -46,7 +45,6 @@ const Dashboard = () => {
     )
     .then(data => 
       { 
-        console.log(data.organisations[0]);
         setDisplayContentText(JSON.stringify(data.organisations[0]));
       })
     .catch(err => console.log(err))
@@ -57,7 +55,6 @@ const Dashboard = () => {
     .then((response) => response.json())
     .then(data => 
       {
-        console.log(data.accounts[0]);
         setDisplayContentText(JSON.stringify(data.accounts[0]));
       })
     .catch(err => console.log(err))
@@ -68,7 +65,6 @@ const Dashboard = () => {
     .then((response) => response.json())
     .then(data => 
       {
-        console.log(data.contacts[0]);
         setDisplayContentText(JSON.stringify(data.contacts[0]));
       })
     .catch(err => console.log(err))
