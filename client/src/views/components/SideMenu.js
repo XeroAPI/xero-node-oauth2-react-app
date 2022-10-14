@@ -8,36 +8,37 @@ import HomeIcon from '@mui/icons-material/Home';
 import List from '@mui/material/List';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-
-const drawerWidth = 240;
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-      '& .MuiDrawer-paper': {
-        position: 'relative',
-        whiteSpace: 'nowrap',
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        boxSizing: 'border-box',
-        ...(!open && {
-          overflowX: 'hidden',
-          transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-          width: theme.spacing(7),
-          [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9),
-          },
-        }),
-      },
-    }),
-  );
+import { useNavigate } from "react-router-dom";
 
 const SideMenu = (props) => {
+    const navigate = useNavigate(); 
+
+    const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+        ({ theme, open }) => ({
+          '& .MuiDrawer-paper': {
+            position: 'relative',
+            whiteSpace: 'nowrap',
+            width: props.drawerWidth,
+            transition: theme.transitions.create('width', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            boxSizing: 'border-box',
+            ...(!open && {
+              overflowX: 'hidden',
+              transition: theme.transitions.create('width', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+              }),
+              width: theme.spacing(7),
+              [theme.breakpoints.up('sm')]: {
+                width: theme.spacing(9),
+              },
+            }),
+          },
+        }),
+      );
+
     return (
         <Drawer variant="permanent" open={open}>
           <Toolbar
@@ -54,6 +55,7 @@ const SideMenu = (props) => {
               size="large"
               onClick={() => {
                 console.log("home clicked");
+                props.setDisplayContentText('Please authenticate to explore the tutorial. This tutorial will show developers how to utilise our API endpoints with the "xero-node" SDK version in package.json. WARNING! This tutorial will Create, Read, Update and Delete REAL objects in the authenticated Xero organisation. Please only authenticate with a Demo Company or a non-production organisation.')
                 navigate("/");
               }}
             >

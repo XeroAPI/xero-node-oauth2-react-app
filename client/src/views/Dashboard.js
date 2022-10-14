@@ -1,74 +1,20 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import { Button, Collapse, ListItemButton, ListItemText } from '@mui/material';
-import ResponseDisplay from './ResponseDisplay';
-import HomeIcon from '@mui/icons-material/Home';
-import { useNavigate } from "react-router-dom";
+import ResponseDisplay from './components/ResponseDisplay';
 import NavBar from './components/NavBar';
 import SideMenu from './components/SideMenu';
 
 const drawerWidth = 240;
 
-// const AppBar = styled(MuiAppBar, {
-//   shouldForwardProp: (prop) => prop !== 'open',
-// })(({ theme, open }) => ({
-//   zIndex: theme.zIndex.drawer + 1,
-//   transition: theme.transitions.create(['width', 'margin'], {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   ...(open && {
-//     marginLeft: drawerWidth,
-//     width: `calc(100% - ${drawerWidth}px)`,
-//     transition: theme.transitions.create(['width', 'margin'], {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//   }),
-// }));
-
-// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-//   ({ theme, open }) => ({
-//     '& .MuiDrawer-paper': {
-//       position: 'relative',
-//       whiteSpace: 'nowrap',
-//       width: drawerWidth,
-//       transition: theme.transitions.create('width', {
-//         easing: theme.transitions.easing.sharp,
-//         duration: theme.transitions.duration.enteringScreen,
-//       }),
-//       boxSizing: 'border-box',
-//       ...(!open && {
-//         overflowX: 'hidden',
-//         transition: theme.transitions.create('width', {
-//           easing: theme.transitions.easing.sharp,
-//           duration: theme.transitions.duration.leavingScreen,
-//         }),
-//         width: theme.spacing(7),
-//         [theme.breakpoints.up('sm')]: {
-//           width: theme.spacing(9),
-//         },
-//       }),
-//     },
-//   }),
-// );
-
 const mdTheme = createTheme();
 
-function DashboardContent() {
-
+const Dashboard = () => {
   const [accountingOpen, setAccountingOpen] = React.useState(true);
   const toggleAccountingList = () => {
     setAccountingOpen(!accountingOpen);
@@ -77,23 +23,23 @@ function DashboardContent() {
   const [connected, setConnected] = React.useState(false);
   const [connectButtonText, setConnectButtonText] = React.useState("Connect to Xero");
   const [connectButtonIsDisabled, setConnectButtonIsDisabled] = React.useState(false);
+  const [displayContentText, setDisplayContentText] = React.useState('Please authenticate to explore the tutorial. This tutorial will show developers how to utilise our API endpoints with the "xero-node" SDK version in package.json. WARNING! This tutorial will Create, Read, Update and Delete REAL objects in the authenticated Xero organisation. Please only authenticate with a Demo Company or a non-production organisation.')
+
   const connectToXero = () => {
-    setConnectButtonText("Connected to Xero");
-    setConnectButtonIsDisabled(true);
-
-    setConnected(true);
-
     fetch('/api/connect')
     .then( (response) => response.json())
     .then(data => {
       console.log(data.consentUrl);
       window.location.href = data.consentUrl;
     })
-    .catch(err => "error")
+    // .then (() => {
+    //   setConnectButtonText("Connected to Xero");
+    //   setConnectButtonIsDisabled(true);
+    //   setConnected(true);
+    // })
+    .catch(err => console.log(err))
   }
-
-  const navigate = useNavigate();
-
+  
   const getOrganisations = () => {
     fetch('/api/organisations')
     .then((response) => response.json()
@@ -101,9 +47,9 @@ function DashboardContent() {
     .then(data => 
       { 
         console.log(data.organisations[0]);
-        navigate('/organisations');
+        setDisplayContentText(JSON.stringify(data.organisations[0]));
       })
-    .catch(err => "error")
+    .catch(err => console.log(err))
   }
 
   const getAccounts = () => {
@@ -112,7 +58,7 @@ function DashboardContent() {
     .then(data => 
       {
         console.log(data.accounts[0]);
-        navigate('/accounts');
+        setDisplayContentText(JSON.stringify(data.accounts[0]));
       })
     .catch(err => console.log(err))
   }
@@ -123,7 +69,7 @@ function DashboardContent() {
     .then(data => 
       {
         console.log(data.contacts[0]);
-        navigate('/contacts');
+        setDisplayContentText(JSON.stringify(data.contacts[0]));
       })
     .catch(err => console.log(err))
   }
@@ -133,74 +79,20 @@ function DashboardContent() {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <NavBar 
+          drawerWidth={drawerWidth}
           connectToXero={connectToXero} 
           connectButtonIsDisabled={connectButtonIsDisabled} 
           connectButtonText={connectButtonText}
         />
-        {/* <AppBar position="absolute" open={open}>
-          <Toolbar>
-            <Button 
-              variant='contained'
-              onClick={connectToXero}
-              disabled={connectButtonIsDisabled}
-              // startIcon={'client/public/assets/8b6963f7-38bb-4360-9693-8ed01584812f.jpeg'}
-              sx={{
-                marginRight: '24px'
-              }}
-              >
-              {connectButtonText}
-            </Button>
-          </Toolbar>
-        </AppBar> */}
         <SideMenu
+          drawerWidth = {drawerWidth}
           accountingOpen = {accountingOpen}
           toggleAccountingList = {toggleAccountingList}
           getOrganisations = {getOrganisations}
           getAccounts = {getAccounts}
           getContacts = {getContacts}
+          setDisplayContentText = {setDisplayContentText}
           ></SideMenu>
-        {/* <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              // justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <Button
-              variant='text'
-              startIcon={< HomeIcon />}
-              size="large"
-              onClick={() => {
-                console.log("home clicked");
-                navigate("/");
-              }}
-            >
-                Home
-            </Button>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            <ListItemButton onClick={toggleAccountingList}>
-              <ListItemText primary="Accounting" />
-              {accountingOpen ? <ExpandLess/> : <ExpandMore/>}
-            </ListItemButton>
-            <Collapse in={accountingOpen} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4}}>
-                  <ListItemText primary="Accounts"/>
-                </ListItemButton>
-                <ListItemButton sx={{ pl: 4}}>
-                  <ListItemText primary="Contacts"/>
-                </ListItemButton>
-                <ListItemButton sx={{ pl: 4}} onClick={getOrganisations}>
-                  <ListItemText primary="Organisations"/>
-                </ListItemButton>
-              </List>
-            </Collapse>
-          </List>
-        </Drawer> */}
         <Box
           component="main"
           sx={{
@@ -224,11 +116,10 @@ function DashboardContent() {
                       marginLeft: 'auto',
                       marginRight: 'auto'
                     }}>
-                      <ResponseDisplay></ResponseDisplay>
+                      <ResponseDisplay displayContent={displayContentText}></ResponseDisplay>
                     </Paper>
                 </Grid>
             </Grid>
-            {/* <Copyright sx={{ pt: 4 }} /> */}
           </Container>
         </Box>
       </Box>
@@ -236,6 +127,4 @@ function DashboardContent() {
   );
 }
 
-export default function Dashboard() {
-  return <DashboardContent />;
-}
+export default Dashboard;

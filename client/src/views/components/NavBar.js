@@ -4,29 +4,25 @@ import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { Button } from '@mui/material';
 
-// This will need to be passed in somehow
-const drawerWidth = 240;
-
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-  })(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-      marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`,
+const NavBar = (props) => {
+    const AppBar = styled(MuiAppBar, {
+      shouldForwardProp: (prop) => prop !== 'open',
+    })(({ theme, open }) => ({
+      zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
+        duration: theme.transitions.duration.leavingScreen,
       }),
-    }),
-  }));
+      ...(open && {
+        marginLeft: props.drawerWidth,
+        width: `calc(100% - ${props.drawerWidth}px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+      }),
+    }));
 
-const NavBar = (props) => {
     return (
         <AppBar position="absolute" open={open}>
             <Toolbar>

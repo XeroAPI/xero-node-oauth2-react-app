@@ -7,8 +7,6 @@ const session = require('express-session');
 
 const path = require('path');
 
-// const cors = require('cors');
-
 import {TokenSet, TokenSetParameters, XeroAccessToken, XeroClient, XeroIdToken} from 'xero-node';
 import jwtDecode from 'jwt-decode';
 
@@ -29,21 +27,13 @@ const xero = new XeroClient({
 if (!client_id || !client_secret || !redirectUrl) {
   throw Error('Environment Variables not all set - please check your .env file in the project root or create one!')
 }
-
 class App {
   public app: express.Application;
   public consentUrl: Promise<String>;
 
   constructor() {
     this.app = express();
-    // this.config();
     this.routes();
-    // this.app.use((req, res, next) => {
-    //   res.setHeader('Access-Control-Allow-Origin','*');
-    //   res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
-    //   res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
-    //   next();
-    // });
 
     this.app.use(express.static(path.join(__dirname, '..' , 'dist')))
 
@@ -51,23 +41,12 @@ class App {
       console.log(`Example app listening at http://localhost:${port}`)
     })
   }
-
-  // authenticationData(req, res) {
-  //   return {
-  //     decodedIdToken: req.session.decodedIdToken,
-  //     decodedAccessToken: req.session.decodedAccessToken,
-  //     tokenSet: req.session.tokenSet,
-  //     allTenants: req.session.allTenants,
-  //     activeTenant: req.session.activeTenant,
-  //   };
-  // };
   
   private routes(): void {
     const router = express.Router();
 
     this.app.use(session({
       secret: "something crazy",
-      // store: new FileStore(fileStoreOptions),
       resave: false,
       saveUninitialized: false,
       cookie: { secure: false },
@@ -77,17 +56,17 @@ class App {
 
     router.get('/', async (req : Request, res : Response) => {
       res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
-      // res.send('Hello World!')
     })
     
     router.get('/api/connect', async (req: Request, res : Response) => {
       try {
         const consentUrl: string = await xero.buildConsentUrl();
-        // res.send(JSON.stringify({consentUrl: consentUrl}));
         res.json({ consentUrl : consentUrl });
     
       } catch (err) {
-        res.send('Sorry, could not connect');
+        console.log(err)
+        res.status(res.statusCode);
+        res.send(err.error);
       }
     })
     
@@ -110,7 +89,6 @@ class App {
         req.session.allTenants = xero.tenants;
         req.session.activeTenant = xero.tenants[0];
         
-        // res.send("authenticated");
         res.redirect("http://localhost:3000/")
         
       } catch (err) {
@@ -128,8 +106,8 @@ class App {
         res.send(JSON.stringify(response.body));
       } catch (err) {
         console.log(err);
-        // const error = JSON.stringify(err.response.body, null, 2);
-        // console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+        res.status(res.statusCode);
+        res.send(err.error);
       }
     })
 
@@ -141,8 +119,8 @@ class App {
         res.send(JSON.stringify(response.body));
       } catch (err) {
         console.log(err);
-        const error = JSON.stringify(err.response.body, null, 2);
-        console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+        res.status(res.statusCode);
+        res.send(err.error);
       }
     })
 
@@ -153,17 +131,12 @@ class App {
 
         res.send(JSON.stringify(response.body));
       } catch (err) {
-        const error = JSON.stringify(err.response.body, null, 2);
-        console.log(`Status Code: ${err.response.statusCode} => ${error}`);
+        console.log(err);
+        res.status(res.statusCode);
+        res.send(err.error);
       }
     })
-    
   }
-
-
-  
-  
- 
 }
 
 export default new App().app;
