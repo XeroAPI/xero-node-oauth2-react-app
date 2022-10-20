@@ -1,14 +1,12 @@
-require("dotenv").config();
-const port = 3000;
-
 import express from "express";
 import { Request, Response } from 'express';
-const session = require('express-session');
-
-const path = require('path');
-
-import {TokenSet, TokenSetParameters, XeroAccessToken, XeroClient, XeroIdToken} from 'xero-node';
 import jwtDecode from 'jwt-decode';
+import { TokenSetParameters, XeroAccessToken, XeroClient, XeroIdToken} from 'xero-node';
+
+require("dotenv").config();
+const session = require('express-session');
+const path = require('path');
+const port = 3000;
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
@@ -44,6 +42,7 @@ class App {
   
   private routes(): void {
     const router = express.Router();
+    const homepageUrl = "http://localhost:3000";
 
     this.app.use(session({
       secret: "something crazy",
@@ -89,7 +88,7 @@ class App {
         req.session.allTenants = xero.tenants;
         req.session.activeTenant = xero.tenants[0];
         
-        res.redirect("http://localhost:3000/")
+        res.redirect(homepageUrl);
         
       } catch (err) {
         console.log(err)
