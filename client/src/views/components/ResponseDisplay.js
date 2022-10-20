@@ -3,7 +3,10 @@ import React from "react";
 const ResponseDisplay =  (props) => {
     return(
         <div className="responseDisplayDiv">
-            {props.displayContent}
+            <h1>{props.contentTitle}</h1>
+            <code>
+                {props.displayContent}
+            </code>
          </div>
     )
 }

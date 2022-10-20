@@ -23,19 +23,15 @@ const Dashboard = () => {
   const [connected, setConnected] = React.useState(false);
   const [connectButtonText, setConnectButtonText] = React.useState("Connect to Xero");
   const [connectButtonIsDisabled, setConnectButtonIsDisabled] = React.useState(false);
+  const [contentTitle, setContentTitle] = React.useState('Please Connect to Xero');
   const [displayContentText, setDisplayContentText] = React.useState('Please authenticate to explore the tutorial. This tutorial will show developers how to utilise our API endpoints with the "xero-node" SDK version in package.json. WARNING! This tutorial will Create, Read, Update and Delete REAL objects in the authenticated Xero organisation. Please only authenticate with a Demo Company or a non-production organisation.')
 
-  const connectToXero = () => {
+  const connectToXero = async() => {
     fetch('/api/connect')
     .then( (response) => response.json())
-    .then(data => {
-      window.location.href = data.consentUrl;
+    .then(async data => {
+      location.assign(data.consentUrl);
     })
-    // .then (() => {
-    //   setConnectButtonText("Connected to Xero");
-    //   setConnectButtonIsDisabled(true);
-    //   setConnected(true);
-    // })
     .catch(err => console.log(err))
   }
   
@@ -45,7 +41,8 @@ const Dashboard = () => {
     )
     .then(data => 
       { 
-        setDisplayContentText(JSON.stringify(data.organisations[0]));
+        setContentTitle("Get Organisations Response");
+        setDisplayContentText(JSON.stringify(data.organisations[0], null, 2));
       })
     .catch(err => console.log(err))
   }
@@ -55,7 +52,8 @@ const Dashboard = () => {
     .then((response) => response.json())
     .then(data => 
       {
-        setDisplayContentText(JSON.stringify(data.accounts[0]));
+        setContentTitle("Get Accounts Response");
+        setDisplayContentText(JSON.stringify(data.accounts[0], null, 2));
       })
     .catch(err => console.log(err))
   }
@@ -65,7 +63,8 @@ const Dashboard = () => {
     .then((response) => response.json())
     .then(data => 
       {
-        setDisplayContentText(JSON.stringify(data.contacts[0]));
+        setContentTitle("Get Contacts Response");
+        setDisplayContentText(JSON.stringify(data.contacts[0], null, 2));
       })
     .catch(err => console.log(err))
   }
@@ -107,12 +106,13 @@ const Dashboard = () => {
                 <Grid>
                     <Paper
                     sx={{
-                      height: '40vh',
                       width: '55vw',
                       marginLeft: 'auto',
-                      marginRight: 'auto'
+                      marginRight: 'auto',
+                      paddingX: '12px',
+                      paddingY: '8px'
                     }}>
-                      <ResponseDisplay displayContent={displayContentText}></ResponseDisplay>
+                      <ResponseDisplay contentTitle={contentTitle} displayContent={displayContentText}></ResponseDisplay>
                     </Paper>
                 </Grid>
             </Grid>
