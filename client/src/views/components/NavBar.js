@@ -30,7 +30,6 @@ const NavBar = (props) => {
                 variant='contained'
                 onClick={props.connectToXero}
                 disabled={props.connectButtonIsDisabled}
-                // startIcon={'client/public/assets/8b6963f7-38bb-4360-9693-8ed01584812f.jpeg'}
                 sx={{
                 marginRight: '24px'
                 }}

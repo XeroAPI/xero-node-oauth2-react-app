@@ -13,6 +13,17 @@ import { useNavigate } from "react-router-dom";
 const SideMenu = (props) => {
     const navigate = useNavigate(); 
 
+    const homeClicked = () => {
+      if (props.connectionState) {
+        props.getTenant();
+        
+      } else {
+        props.setContentTitle('Please Connect to Xero');
+        props.setDisplayContentText('Please authenticate to explore the tutorial. This tutorial will show developers how to utilise our API endpoints with the "xero-node" SDK version in package.json. WARNING! This tutorial will Create, Read, Update and Delete REAL objects in the authenticated Xero organisation. Please only authenticate with a Demo Company or a non-production organisation.')
+      }
+
+    }
+
     const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
         ({ theme, open }) => ({
           '& .MuiDrawer-paper': {
@@ -54,8 +65,7 @@ const SideMenu = (props) => {
               startIcon={< HomeIcon />}
               size="large"
               onClick={() => {
-                console.log("home clicked");
-                props.setDisplayContentText('Please authenticate to explore the tutorial. This tutorial will show developers how to utilise our API endpoints with the "xero-node" SDK version in package.json. WARNING! This tutorial will Create, Read, Update and Delete REAL objects in the authenticated Xero organisation. Please only authenticate with a Demo Company or a non-production organisation.')
+                homeClicked();
                 navigate("/");
               }}
             >

@@ -97,6 +97,16 @@ class App {
       }
     })
 
+    router.get('/api/tenant', async (req: Request, res: Response) => {
+      try {
+        res.send(JSON.stringify(req.session.activeTenant));
+      } catch (err) {
+        console.log(err);
+        res.status(res.statusCode);
+        res.send(err.error);
+      }
+    })
+
     router.get('/api/organisations', async (req : Request, res : Response) => {
       try {
         const response = await xero.accountingApi.getOrganisations(req.session.activeTenant.tenantId);
