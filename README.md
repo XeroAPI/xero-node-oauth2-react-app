@@ -2,6 +2,20 @@
 
 This Node project demonstrates how to set up a React frontend when using the Xero-Node SDK and OAuth2.0. 
 
+## Intro to the Stack
+### Client Dependencies
+#### Dependencies
+- React - for building the UI based on components
+- React-dom 
+- React-router-dom
+- Redux - for global state management 
+- Material UI - Pre-built React components for getting started with nicer UI
+
+#### Dev Dependencies
+- Babel - JavaScript transcompiler
+- Webpack - Module bundler for JavaScript
+
+
 ## Setup
 
 ### Configuring with Credentials
@@ -32,6 +46,6 @@ There are separate apps for the client and the server, but the build files from 
 If changes are made to the FE app, and you would like to rebuild to interact with the BE, run the following commands:
 - Navigate to the ./client directory
 - `npm install`
-- `npm run build` (this will also copy the build files into the ./server directory)
+- `npm run build` (this will copy the build files into the ./server directory)
 - Navigate back to the ./server directory 
-- Restart the server
+- Restart the server (`npm run start`)
